@@ -1,0 +1,28 @@
+#ifndef BLYNK_HANDLER_H
+#define BLYNK_HANDLER_H
+
+#include "BlynkCredentials.h"
+#include <WiFi.h>
+#include <WiFiClient.h>
+
+#ifndef BlynkSimpleEsp32_h
+#include <BlynkSimpleEsp32.h>   // Include the Blynk ESP32 library
+#endif
+
+class BlynkHandler
+{
+public:
+    BlynkHandler(const char* ssid, const char* pass, const char* authToken);
+    void begin();
+    void run();
+    void sendUptime();
+
+private:
+    BlynkTimer timer;
+    const char* ssid;
+    const char* pass;
+    const char* authToken;
+    void setupTimer();
+};
+
+#endif // BLYNK_HANDLER_H
