@@ -1,5 +1,6 @@
 #include <TFT_eSPI.h>
 #include "constants.h" // Include constants file
+#include <cmath>
 
 class TFTDisplay
 {
@@ -22,19 +23,17 @@ public:
         tft.fillScreen(TFT_BLACK);   // Clear the screen
         tft.setTextColor(TFT_WHITE); // Set default text color
 
-        // tft.drawLine(160, 0, 160, 480, TFT_WHITE);  // First dividing line at x = 106
-        // tft.drawLine(320, 0, 320, 480, TFT_WHITE);  // Second dividing line at x = 213
-
-        // // Draw dividing lines with contrasting color for visibility
-        // tft.drawLine(sectionWidth, 0, sectionWidth, screenHeight, TFT_WHITE);          // First line
-        // tft.drawLine(2 * sectionWidth, 0, 2 * sectionWidth, screenHeight, TFT_WHITE);  // Second line
-
         // // Optional: Draw test boundaries to ensure coordinates are correct
-        tft.drawRect(0, 0, screenWidth, screenHeight, TFT_WHITE);  // Red border around the whole screen
+        tft.drawRect(0, 0, screenWidth, screenHeight, TFT_WHITE); // Red border around the whole screen
     }
 
-    void displayValues(int section, float voltage, float current, float power, float energy)
+    void displayValues(int section, JsonDocument doc)
     {
+        float voltage = doc["voltage"] | NAN; // Default to NAN if not present
+        float current = doc["current"] | NAN;
+        float power = doc["active_power"] | NAN;
+        float energy = doc["active_energy"] | NAN;
+
         int x = section * sectionWidth + 10;
         int y = 20;
 
@@ -58,7 +57,7 @@ public:
         tft.setTextFont(VALUE_FONT);   // Value font
         tft.setTextColor(VALUE_COLOR); // Value color
         tft.setCursor(x + 40, y + 20);
-        tft.printf("%.2f V", voltage);
+        tft.printf("%s V", std::isnan(voltage) ? "N/A" : String(voltage, 2).c_str());
 
         y += 60; // Move down for next reading
 
@@ -71,7 +70,7 @@ public:
         tft.setTextFont(VALUE_FONT);
         tft.setTextColor(VALUE_COLOR);
         tft.setCursor(x + 40, y + 20);
-        tft.printf("%.2f A", current);
+        tft.printf("%s A", std::isnan(current) ? "N/A" : String(current, 2).c_str());
 
         y += 60; // Move down for next reading
 
@@ -84,7 +83,7 @@ public:
         tft.setTextFont(VALUE_FONT);
         tft.setTextColor(VALUE_COLOR);
         tft.setCursor(x + 40, y + 20);
-        tft.printf("%.2f W", power);
+        tft.printf("%s W", std::isnan(power) ? "N/A" : String(power, 2).c_str());
 
         y += 60; // Move down for next reading
 
@@ -97,6 +96,6 @@ public:
         tft.setTextFont(VALUE_FONT);
         tft.setTextColor(VALUE_COLOR);
         tft.setCursor(x + 40, y + 20);
-        tft.printf("%.2f Wh", energy);
+        tft.printf("%s Wh", std::isnan(energy) ? "N/A" : String(energy, 2).c_str());
     }
 };
