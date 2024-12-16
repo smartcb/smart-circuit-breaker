@@ -1,20 +1,18 @@
-/*************************************************************
-
-  This is a simple demo of sending and receiving some data.
-  Be sure to check out other examples!
-
- *************************************************************/
-
 /* Fill-in information from Blynk Device Info here */
-#define BLYNK_TEMPLATE_ID           "TMPL631WmRdLb"
-#define BLYNK_TEMPLATE_NAME         "Quickstart Template"
-#define BLYNK_AUTH_TOKEN            "ZKjyXPdRSUTV7353CoHp3qaFKIvhW4Vs"
+#define BLYNK_TEMPLATE_ID "TMPL6cHiIx4SW"
+#define BLYNK_TEMPLATE_NAME "Smart Circuit Breaker"
+#define BLYNK_AUTH_TOKEN "3Yv_0pOJia2C7i-bt-2XM09BRMeaPFE7"
 
 /* Comment this out to disable prints and save space */
 #define BLYNK_PRINT Serial
 
-#define LED_CONTROL_PIN 32
-
+#include <Arduino.h>
+#include <ArduinoJson.h>
+#include <MycilaPZEM004Tv3.h>
+#include <TFT_eSPI.h>
+#include "constants.h" // Include constants file
+#include "TFTDisplay.h"
+#include <elapsedMillis.h>
 #include <WiFi.h>
 #include <WiFiClient.h>
 #include <BlynkSimpleEsp32.h>
@@ -26,62 +24,156 @@ char pass[] = "donsky982";
 
 BlynkTimer timer;
 
+Mycila::PZEM pzem1;
+Mycila::PZEM pzem2;
+Mycila::PZEM pzem3;
+
+// TFTDisplay instance
+TFT_eSPI tft = TFT_eSPI();
+TFTDisplay display(tft);
+
+// Variables for elapsed time tracking
+elapsedMillis totalElapsed;                // Tracks total cycle time
+elapsedMillis moduleElapsed;               // Tracks time between module readings
+const unsigned long totalInterval = 5000;  // 5 seconds for a complete cycle
+const unsigned long moduleInterval = 1000; // 1 second between module readings
+int currentModule = 0;                     // Tracks which PZEM module to read
+
+void sendReadings(JsonDocument doc);
+
+#define LED_CONTROL_PIN 32 // GPIO pin to control the transistor
+
 // This function is called every time the Virtual Pin 0 state changes
-BLYNK_WRITE(V0)
+BLYNK_WRITE(V4)
 {
   // Set incoming value from pin V0 to a variable
   int value = param.asInt();
 
   // Control the LED based on V0's value
-  if (value == 1) {
-    digitalWrite(LED_CONTROL_PIN, HIGH); // Turn on LED
-  } else {
-    digitalWrite(LED_CONTROL_PIN, LOW);  // Turn off LED
+  if (value == 1)
+  {
+    digitalWrite(LED_CONTROL_PIN, HIGH);
   }
-
-  // Update state on another virtual pin (optional)
-  Blynk.virtualWrite(V1, value);
-}
-
-// This function is called every time the device is connected to the Blynk.Cloud
-BLYNK_CONNECTED()
-{
-  // Change Web Link Button message to "Congratulations!"
-  Blynk.setProperty(V3, "offImageUrl", "https://static-image.nyc3.cdn.digitaloceanspaces.com/general/fte/congratulations.png");
-  Blynk.setProperty(V3, "onImageUrl",  "https://static-image.nyc3.cdn.digitaloceanspaces.com/general/fte/congratulations_pressed.png");
-  Blynk.setProperty(V3, "url", "https://docs.blynk.io/en/getting-started/what-do-i-need-to-blynk/how-quickstart-device-was-made");
-}
-
-// This function sends Arduino's uptime every second to Virtual Pin 2.
-void myTimerEvent()
-{
-  // You can send any value at any time.
-  // Please don't send more than 10 values per second.
-  Blynk.virtualWrite(V2, millis() / 5000);
+  else
+  {
+    digitalWrite(LED_CONTROL_PIN, LOW);
+  }
 }
 
 void setup()
 {
-  // Debug console
   Serial.begin(115200);
+  while (!Serial)
+    continue;
 
   Blynk.begin(BLYNK_AUTH_TOKEN, ssid, pass);
-  // You can also specify server:
-  //Blynk.begin(BLYNK_AUTH_TOKEN, ssid, pass, "blynk.cloud", 80);
-  //Blynk.begin(BLYNK_AUTH_TOKEN, ssid, pass, IPAddress(192,168,1,100), 8080);
-
-  // Setup a function to be called every second
-  timer.setInterval(1000L, myTimerEvent);
 
   pinMode(LED_CONTROL_PIN, OUTPUT); // Set pin as output
-  digitalWrite(LED_CONTROL_PIN, LOW); // Ensure LED starts off
+
+  // Initialize TFT display
+  display.initialize();
+
+  // Initialize PZEM modules
+  pzem1.begin(Serial1, 14, 27, 0x01, true);
+  pzem2.begin(Serial1, 14, 27, 0x02, true);
+  pzem3.begin(Serial1, 14, 27, 0x03, true);
 }
 
 void loop()
 {
+  // Reset the cycle if the total elapsed time exceeds the total interval
+  if (totalElapsed >= totalInterval)
+  {
+    totalElapsed = 0;  // Reset the total cycle timer
+    currentModule = 0; // Restart from the first module
+  }
+
+  // Check if it's time to read the next module
+  if (moduleElapsed >= moduleInterval && currentModule < 3)
+  {
+    moduleElapsed = 0; // Reset the module timer
+
+    JsonDocument doc;
+    switch (currentModule)
+    {
+    case 0: // Read PZEM1
+      if (pzem1.isEnabled())
+      {
+        pzem1.toJson(doc.to<JsonObject>());
+        Serial.printf("0x%02X ", pzem1.getDeviceAddress());
+        serializeJson(doc, Serial);
+        Serial.println();
+        display.displayValues(0, doc); // Display in section 0
+        sendReadings(doc);
+      }
+      break;
+
+    case 1: // Read PZEM2
+      if (pzem2.isEnabled())
+      {
+        pzem2.toJson(doc.to<JsonObject>());
+        Serial.printf("0x%02X ", pzem2.getDeviceAddress());
+        serializeJson(doc, Serial);
+        Serial.println();
+        display.displayValues(1, doc); // Display in section 1
+        sendReadings(doc);
+      }
+      break;
+
+    case 2: // Read PZEM3
+      if (pzem3.isEnabled())
+      {
+        pzem3.toJson(doc.to<JsonObject>());
+        Serial.printf("0x%02X ", pzem3.getDeviceAddress());
+        serializeJson(doc, Serial);
+        Serial.println();
+        display.displayValues(2, doc); // Display in section 2
+        sendReadings(doc);
+      }
+      break;
+    }
+
+    // Move to the next module
+    currentModule++;
+  }
   Blynk.run();
-  timer.run();
-  // You can inject your own code or combine it with other sketches.
-  // Check other examples on how to communicate with Blynk. Remember
-  // to avoid delay() function!
+}
+
+void sendReadings(JsonDocument doc)
+{
+  // Check if keys exist and retrieve their values
+  float voltage = doc["voltage"].is<float>() ? doc["voltage"].as<float>() : 0.0;
+  float current = doc["current"].is<float>() ? doc["current"].as<float>() : 0.0;
+
+  if (voltage == 0.0)
+  {
+    // if (currentModule == 0)
+    // {
+    //   Blynk.logEvent("voltage_cut_line_1", "Line 1 is cut!");
+    // }
+    // else if (currentModule == 1)
+    // {
+    //   Blynk.logEvent("voltage_cut_line_2", "Line 2 is cut!");
+    // }
+    // else if (currentModule == 1)
+    // {
+    //   // Blynk.logEvent("voltage_cut_line_3", "Line 3 is cut!");
+    // }
+  }
+
+  // Send voltage
+  if (currentModule == 0)
+  {
+    Blynk.virtualWrite(V0, voltage);
+    Blynk.virtualWrite(V1, current);
+  }
+  else if (currentModule == 1)
+  {
+    Blynk.virtualWrite(V2, voltage);
+    Blynk.virtualWrite(V3, current);
+  }
+  else if (currentModule == 2)
+  {
+    // Add mappings for the third PZEM module if needed
+  }
 }
