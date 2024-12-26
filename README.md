@@ -18,3 +18,7 @@
 ### ESP32 to PZEM-004T Wiring
 ![Smart Circuit Breaker](https://github.com/user-attachments/assets/4669f0d2-258d-4a4c-8c08-b779c27f6a73)
 
+![image](https://github.com/user-attachments/assets/d816e7c3-71b4-45a4-95b8-3f272fa3f40c)
+Note: Please disregard the Arduino Uno,we will be using ESP32
+
+
