@@ -1,7 +1,14 @@
 /* Fill-in information from Blynk Device Info here */
-#define BLYNK_TEMPLATE_ID "TMPL6cHiIx4SW"
+// OLD BLYNK TOKEN
+// #define BLYNK_TEMPLATE_ID "TMPL6cHiIx4SW"
+// #define BLYNK_TEMPLATE_NAME "Smart Circuit Breaker"
+// #define BLYNK_AUTH_TOKEN "3Yv_0pOJia2C7i-bt-2XM09BRMeaPFE7"
+
+// NEW BLYNK TOKEN
+#define BLYNK_TEMPLATE_ID "TMPL6-3UKmQjI"
 #define BLYNK_TEMPLATE_NAME "Smart Circuit Breaker"
-#define BLYNK_AUTH_TOKEN "3Yv_0pOJia2C7i-bt-2XM09BRMeaPFE7"
+#define BLYNK_AUTH_TOKEN "iFYO5QYTCHszBXZQI3NabYkLcP4VmO0D"
+
 
 /* Comment this out to disable prints and save space */
 #define BLYNK_PRINT Serial
@@ -43,8 +50,8 @@ void sendReadings(JsonDocument doc);
 
 #define LED_CONTROL_PIN 32 // GPIO pin to control the transistor
 
-// This function is called every time the Virtual Pin 0 state changes
-BLYNK_WRITE(V4)
+// This function is called every time the Virtual Pin 6 state changes
+BLYNK_WRITE(V6)
 {
   // Set incoming value from pin V0 to a variable
   int value = param.asInt();
@@ -174,6 +181,7 @@ void sendReadings(JsonDocument doc)
   }
   else if (currentModule == 2)
   {
-    // Add mappings for the third PZEM module if needed
+    Blynk.virtualWrite(V4, voltage);
+    Blynk.virtualWrite(V5, current);
   }
 }
