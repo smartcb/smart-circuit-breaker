@@ -87,3 +87,11 @@ The TFT should display Hello from Smart Circuit Breaker
 Expected Output:
 We should see the PZEM reading
 
+#### Test the SSR being driven by the transistor
+1. Run and check the output of test_drive_transistor.cpp
+
+Expected Output:
+We should see the SSR blinking every 5 seconds
+
+
+
