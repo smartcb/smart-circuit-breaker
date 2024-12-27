@@ -94,4 +94,13 @@ Expected Output:
 We should see the SSR blinking every 5 seconds
 
 
+#### Setup the SSR wiring from the Load Side to the power side
+Note: Adjust and double check for shorting
 
+
+#### Test the blynk connection
+1. Run and check the output of test_main.cpp
+
+Expected Output:
+Open the BLYNK Cloud Application https://blynk.cloud/dashboard and login using the credentials given by Ram
+Click the Smart Circuit Breaker and verify that the output of the Line is being displayed (Current and Voltage)
