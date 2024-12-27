@@ -71,3 +71,9 @@ The Internal LED of the ESP32 should blink continuously
 Expected Output:
 The TFT should display Hello from Smart Circuit Breaker
 
+#### Test the PZEM
+1. Run and check the output of test_read_pzem_async.cpp
+
+Expected Output:
+We should see the PZEM reading
+
