@@ -9,7 +9,8 @@
 ![image](https://github.com/user-attachments/assets/97290607-e8ca-4df4-af8c-4fba7f0a244e)
 
 ### ESP32 to TFT Wiring
-![image](https://github.com/user-attachments/assets/3ba365ad-7e61-47f6-895a-4d275df18bc6)
+![image](https://github.com/user-attachments/assets/4b1a4289-7582-4520-b085-fa2a7ea72061)
+
 
 
 ### PZEM-004T
