@@ -21,4 +21,31 @@
 ![image](https://github.com/user-attachments/assets/d816e7c3-71b4-45a4-95b8-3f272fa3f40c)
 Note: Please disregard the Arduino Uno,we will be using ESP32
 
+### How to update your local project from GitHub repository
+
+1. Open command prompt
+![image](https://github.com/user-attachments/assets/e8e88ab9-9e35-46f4-a4aa-be77b27ce23a)
+
+2. Type the following in your command prompt
+```
+cd c:\git-repo\smart-circuit-breaker
+```
+![image](https://github.com/user-attachments/assets/4c2793c0-134b-46e2-af10-0ceffe9f8e52)
+
+3. Check if you have local changes in your project by typing the below command
+```
+git status
+```
+If there are any local changes then we need to delete it by executing the below command
+```
+git checkout .
+```
+Run `git status` again to verify that it is clean
+![image](https://github.com/user-attachments/assets/f5516821-8d82-4478-a62c-a3b7c351eaab)
+4. Get the latest changes from GitHub by running the following command
+```
+git pull
+```
+
+
 
