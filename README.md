@@ -65,3 +65,9 @@ This should open your project in VSCode
 Expected Output:
 The Internal LED of the ESP32 should blink continuously
 
+#### Test the TFT
+1. Run and check the output of test_hello_world_tft.cpp
+
+Expected Output:
+The TFT should display Hello from Smart Circuit Breaker
+
