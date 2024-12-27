@@ -2,6 +2,11 @@
 
 ## Wiring Diagram
 
+![image](https://github.com/user-attachments/assets/81232749-465c-4467-ac06-1850387e850b)
+
+![image](https://github.com/user-attachments/assets/7a1b99eb-54e6-4619-a5a1-dfa1a0eb9420)
+
+
 ### ESP32
 ![image](https://github.com/user-attachments/assets/ff318ec0-746d-4fcb-b0bd-e28d05273a8d)
 
