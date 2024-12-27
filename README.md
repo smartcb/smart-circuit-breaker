@@ -48,5 +48,14 @@ Run `git status` again to verify that it is clean
 git pull
 ```
 
+### How to open project in VSCode
+1. Open command prompt
+2. Change the directory to your project folder
+```
+cd c:\git-repo\smart-circuit-breaker
+code .
+```
+This should open your project in VSCode
+
 
 
