@@ -9,7 +9,7 @@ void setup()
   tft.fillScreen(TFT_BLACK);
   tft.setCursor(0,0,4);
   tft.setTextColor(TFT_WHITE);
-  tft.println ("Welcome to DonskyTech!");
+  tft.println ("Welcome to Smart Circuit Breaker!");
 }
 
 void loop() 
