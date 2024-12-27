@@ -58,4 +58,10 @@ code .
 This should open your project in VSCode
 
 
+### Testing Steps
+#### Test the ESP32
+1. Run and check the output of test_blink_esp32_led.cpp
+
+Expected Output:
+The Internal LED of the ESP32 should blink continuously
 
