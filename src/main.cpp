@@ -48,7 +48,9 @@ int currentModule = 0;                     // Tracks which PZEM module to read
 
 void sendReadings(JsonDocument doc);
 
-#define LED_CONTROL_PIN 32 // GPIO pin to control the transistor
+#define SSR1_CONTROL_PIN 32 // GPIO pin to control SSR 1 
+#define SSR2_CONTROL_PIN 33 // GPIO pin to control SSR 2 
+#define SSR3_CONTROL_PIN 25 // GPIO pin to control SSR 3 
 
 // This function is called every time the Virtual Pin 6 state changes
 BLYNK_WRITE(V6)
@@ -59,13 +61,49 @@ BLYNK_WRITE(V6)
   // Control the LED based on V0's value
   if (value == 1)
   {
-    digitalWrite(LED_CONTROL_PIN, HIGH);
+    digitalWrite(SSR1_CONTROL_PIN, HIGH);
   }
   else
   {
-    digitalWrite(LED_CONTROL_PIN, LOW);
+    digitalWrite(SSR1_CONTROL_PIN, LOW);
   }
 }
+
+// This function is called every time the Virtual Pin 6 state changes
+BLYNK_WRITE(V7)
+{
+  // Set incoming value from pin V0 to a variable
+  int value = param.asInt();
+
+  // Control the LED based on V0's value
+  if (value == 1)
+  {
+    digitalWrite(SSR2_CONTROL_PIN, HIGH);
+  }
+  else
+  {
+    digitalWrite(SSR2_CONTROL_PIN, LOW);
+  }
+}
+
+// This function is called every time the Virtual Pin 6 state changes
+BLYNK_WRITE(V8)
+{
+  // Set incoming value from pin V0 to a variable
+  int value = param.asInt();
+
+  // Control the LED based on V0's value
+  if (value == 1)
+  {
+    digitalWrite(SSR3_CONTROL_PIN, HIGH);
+  }
+  else
+  {
+    digitalWrite(SSR3_CONTROL_PIN, LOW);
+  }
+}
+
+
 
 void setup()
 {
@@ -75,7 +113,9 @@ void setup()
 
   Blynk.begin(BLYNK_AUTH_TOKEN, ssid, pass);
 
-  pinMode(LED_CONTROL_PIN, OUTPUT); // Set pin as output
+  pinMode(SSR1_CONTROL_PIN, OUTPUT); // Set pin as output
+  pinMode(SSR2_CONTROL_PIN, OUTPUT); // Set pin as output
+  pinMode(SSR3_CONTROL_PIN, OUTPUT); // Set pin as output
 
   // Initialize TFT display
   display.initialize();
@@ -84,6 +124,11 @@ void setup()
   pzem1.begin(Serial1, 14, 27, 0x01, true);
   pzem2.begin(Serial1, 14, 27, 0x02, true);
   pzem3.begin(Serial1, 14, 27, 0x03, true);
+
+  // Set all SSR to OFF during boot
+  digitalWrite(SSR1_CONTROL_PIN, LOW);
+  digitalWrite(SSR2_CONTROL_PIN, LOW);
+  digitalWrite(SSR3_CONTROL_PIN, LOW);
 }
 
 void loop()
@@ -154,18 +199,18 @@ void sendReadings(JsonDocument doc)
 
   if (voltage == 0.0)
   {
-    // if (currentModule == 0)
-    // {
-    //   Blynk.logEvent("voltage_cut_line_1", "Line 1 is cut!");
-    // }
-    // else if (currentModule == 1)
-    // {
-    //   Blynk.logEvent("voltage_cut_line_2", "Line 2 is cut!");
-    // }
-    // else if (currentModule == 1)
-    // {
-    //   // Blynk.logEvent("voltage_cut_line_3", "Line 3 is cut!");
-    // }
+    if (currentModule == 0)
+    {
+      Blynk.logEvent("voltage_cut_line_1", "Line 1 is cut!");
+    }
+    else if (currentModule == 1)
+    {
+      Blynk.logEvent("voltage_cut_line_2", "Line 2 is cut!");
+    }
+    else if (currentModule == 1)
+    {
+      Blynk.logEvent("voltage_cut_line_3", "Line 3 is cut!");
+    }
   }
 
   // Send voltage

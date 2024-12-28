@@ -34,11 +34,11 @@ BLYNK_WRITE(V0)
 
   // Control the LED based on V0's value
   if (value == 1) {
-    digitalWrite(LED_CONTROL_PIN, HIGH); // Turn on LED
+    digitalWrite(SSR1_CONTROL_PIN, HIGH); // Turn on LED
     Serial.println("Sending switch on event...");
     Blynk.logEvent("switch_on", "Switch is ON");
   } else {
-    digitalWrite(LED_CONTROL_PIN, LOW);  // Turn off LED
+    digitalWrite(SSR1_CONTROL_PIN, LOW);  // Turn off LED
   }
 
   // Update state on another virtual pin (optional)
@@ -75,8 +75,8 @@ void setup()
   // Setup a function to be called every second
   timer.setInterval(1000L, myTimerEvent);
 
-  pinMode(LED_CONTROL_PIN, OUTPUT); // Set pin as output
-  digitalWrite(LED_CONTROL_PIN, LOW); // Ensure LED starts off
+  pinMode(SSR1_CONTROL_PIN, OUTPUT); // Set pin as output
+  digitalWrite(SSR1_CONTROL_PIN, LOW); // Ensure LED starts off
 }
 
 void loop()
