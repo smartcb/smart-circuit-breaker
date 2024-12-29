@@ -3,15 +3,15 @@
 #define LED_CONTROL_PIN 32  // GPIO pin to control the transistor
 
 void setup() {
-  pinMode(SSR1_CONTROL_PIN, OUTPUT); // Set pin as output
+  pinMode(LED_CONTROL_PIN, OUTPUT); // Set pin as output
 }
 
 void loop() {
   // Turn on LED
-  digitalWrite(SSR1_CONTROL_PIN, HIGH);
+  digitalWrite(LED_CONTROL_PIN, HIGH);
   delay(5000);  // LED on for 1 second
 
   // Turn off LED
-  digitalWrite(SSR1_CONTROL_PIN, LOW);
+  digitalWrite(LED_CONTROL_PIN, LOW);
   delay(5000);  // LED off for 1 second
 }
