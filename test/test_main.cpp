@@ -207,7 +207,7 @@ void sendReadings(JsonDocument doc)
     {
       Blynk.logEvent("voltage_cut_line_2", "Line 2 is cut!");
     }
-    else if (currentModule == 1)
+    else if (currentModule == 2)
     {
       Blynk.logEvent("voltage_cut_line_3", "Line 3 is cut!");
     }
