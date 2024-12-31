@@ -104,3 +104,28 @@ Note: Adjust and double check for shorting
 Expected Output:
 Open the BLYNK Cloud Application https://blynk.cloud/dashboard and login using the credentials given by Ram
 Click the Smart Circuit Breaker and verify that the output of the Line is being displayed (Current and Voltage)
+
+#### Validate the Blynk Connection
+You should see the following in your terminal serial monitor when you are able to connect to Blynk Server
+```
+--- Terminal on COM5 | 115200 8-N-1
+--- Available filters and text transformations: colorize, debug, default, direct, esp32_exception_decoder, hexlify, log2file, nocontrol, printable, send_on_enter, time
+--- More details at https://bit.ly/pio-monitor-filters
+--- Quit: Ctrl+C | Menu: Ctrl+T | Help: Ctrl+T followed by Ctrl+H
+E (365) esp_core_dump_flash: Incorrect�xize of core dump image: 572661795
+[28] Connecting to donskytech-1stFloor
+[4155] Connected to WiFi
+[4155] IP: 192.168.100.42
+[4155]
+    ___  __          __
+   / _ )/ /_ _____  / /__
+  / _  / / // / _ \/  '_/
+ /____/_/\_, /_//_/_/\_\
+        /___/ v1.3.2 on ESP32
+
+ #StandWithUkraine    https://bit.ly/swua
+
+
+[4166] Connecting to blynk.cloud:80
+[4848] Ready (ping: 33ms).
+```
